@@ -31,9 +31,9 @@ This is a simple API for  Bond and Order project
   POST  /api/v1/bond/order/{orderId}
 ```
 
-| Url Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `$orderId`      | `integer` | **Required Integer** |
+| Url Parameter  | Type     | Description                       |
+|:---------------| :------- | :-------------------------------- |
+| `orderId`      | `integer` | **Required Integer** |
 
 
 ## Authors
