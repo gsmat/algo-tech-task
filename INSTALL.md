@@ -40,15 +40,22 @@ Install dependencies with composer command to the  project
 composer install
 ```
 
-
 Generate the Laravel project key
+
 ```sh
 php artisan key:generate
 ```
 
 Start the project
+
 ```sh
 php artisan serve
+```
+
+Database BackUp command ( If mysqldump command defined on the System Variables then run)
+
+```sh
+php artisan db:backup
 ```
 
 Go to the project in browser
