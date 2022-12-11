@@ -16,43 +16,47 @@ class BondController extends Controller
             $calculationPeriod = (int)$bond->calculating_period_interest;
             $paymentFrequency = (int)$bond->payment_frequency_coupon;
             $issueDate = $bond->issue_date;
-            switch ($calculationPeriod) {
-                case 360:
-                    $periodDays = (12 / $paymentFrequency) * 30;
-                    break;
-                case 364:
-                    $periodDays = 364 / $paymentFrequency;
-                    break;
-                case 365:
-                    $periodMonth = 12 / $paymentFrequency;
-                    break;
-            }
-            $carbonInstance = new Carbon();
+            $periodDate = $this->getPeriodDays($calculationPeriod, $paymentFrequency);
+
+            date_default_timezone_set('UTC');
             $dates = [];
+            $date = Carbon::parse($issueDate);
+
             for ($i = 0; $i < 12 / $paymentFrequency; $i++) {
-                $date = $carbonInstance::createFromFormat('Y-m-d', $issueDate);
-                $calculationPeriod !== 365
-                    ? $date = $date->addDays($periodDays)->toDateString()
-                    : $date = $date->addMonth($periodMonth)->toDateString();
-
-                $daysOfWeek = $carbonInstance::parse($date)->dayOfWeek;
-
-                if (in_array($daysOfWeek, [0, 6])) {
-                    $date = $carbonInstance::parse($date)->startOfWeek()->addWeeks(1)->toDateString();
+                if ($date->isWeekend()) {
+                    $date = $date->startOfWeek()->addWeeks(1);
                 }
 
-                $dates['date'] = $date;
-            }
-            return response()->json([
-                'message' => true,
-                'dates' => $dates
-            ], 200);
+                if ($calculationPeriod !== 365) {
+                    $date = strtotime("+{$periodDate} days", strtotime($date));
+                } else {
+                    $date = strtotime("+{$periodDate} months", strtotime($date));
+                }
+                $date = Carbon::parse($date);
 
+                $dates[] = array("date" => $date->toDateString());
+            }
+
+            return BaseController::responseJson(true, $dates, 'dates', 200);
         } catch (ModelNotFoundException $exception) {
-            return response()->json([
-                'message' => $exception->getMessage()
-            ], 500);
+            return BaseController::responseJson($exception->getMessage(), null, null, 500);
         }
+    }
+
+    public function getPeriodDays($calculationPeriod, $paymentFrequency)
+    {
+        switch ($calculationPeriod) {
+            case 360:
+                $periodTimes = (12 / $paymentFrequency) * 30;
+                break;
+            case 364:
+                $periodTimes = 364 / $paymentFrequency;
+                break;
+            case 365:
+                $periodTimes = 12 / $paymentFrequency;
+                break;
+        }
+        return $periodTimes;
     }
 
 }
