@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('/v1/bond')->group(function () {
-    Route::get('/{id}/payouts', [BondController::class, 'interestDate'])->name('calculate.interest.date');
-    Route::post('/{id}/order', [OrderController::class, 'orderBond'])->name('order.bond');
-    Route::post('/order/{orderId}', [OrderController::class, 'interestPayments'])->name('interest.payments');
+    Route::get('/{id}/payouts', [BondController::class, 'interestDate'])->name('calculate.interest.date')->where('id', '[0-9]+');
+    Route::post('/{id}/order', [OrderController::class, 'orderBond'])->name('order.bond')->where('id', '[0-9]+');
+    Route::post('/order/{orderId}', [OrderController::class, 'interestPayments'])->name('interest.payments')->where('orderId', '[0-9]+');
 });
