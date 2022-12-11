@@ -51,5 +51,5 @@ Start the project
 php artisan serve
 ```
 
-Access the project
+Go to the project in browser
 [http://localhost:8000](http://localhost:8000)
