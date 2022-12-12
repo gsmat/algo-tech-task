@@ -22,6 +22,11 @@ DB_USERNAME=username
 DB_PASSWORD=password
 ```
 
+Install dependencies with composer command to the  project 
+```sh
+composer install
+```
+
 
 Create tables with migration command
 ```sh
@@ -34,11 +39,6 @@ Seed dummy data to the tables
 php artisan db:seed
 ```
 
-
-Install dependencies with composer command to the  project 
-```sh
-composer install
-```
 
 Generate the Laravel project key
 
